@@ -1,0 +1,45 @@
+"""Bazel module for laser cutting schemas "sofa leg stopper"s using FreeCAD.
+
+A sofa leg stopper is a piece that sits between the sofa's legs and the wall.
+It ensures the sofa is always at least a certain distance from the wall.
+The sofa leg stoppers prevents the sofa from sliding back towards the wall.
+"""
+
+module(
+    name = "sofa-leg-stoper",
+)
+
+bazel_dep(
+    name = "platforms",
+    version = "1.1.0",
+)
+bazel_dep(
+    name = "rules_freecad",
+    version = "0.4.0",
+)
+bazel_dep(
+    name = "rules_python",
+    version = "2.4.1",
+)
+
+register_execution_platforms(
+    "@rules_freecad//platforms:freecad_linux_x86_64",
+)
+
+# Require __init__.py files to be created explicitly.
+rules_python_config = use_extension(
+    "@rules_python//python/extensions:config.bzl",
+    "config",
+)
+rules_python_config.explicit_init_py(default = True)
+
+python = use_extension(
+    "@rules_python//python/extensions:python.bzl",
+    "python",
+)
+python.toolchain(
+    is_default = True,
+    # python_version must match the python version embedde in FreeCAD.
+    python_version = "3.11.14",
+)
+use_repo(python, "python_3_11", "python_versions", "pythons_hub")

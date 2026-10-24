@@ -1,0 +1,19 @@
+load(
+    "@rules_python//python:defs.bzl",
+    "py_binary",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+py_binary(
+    name = "sofa_leg_stopper_py",
+    srcs = [
+        "sofa-leg-stopper.py",
+    ],
+    main = "sofa-leg-stopper.py",
+    deps = [
+    ],
+    target_compatible_with = [
+        "@rules_freecad//platforms:freecad_1.1.x",
+    ],
+)
