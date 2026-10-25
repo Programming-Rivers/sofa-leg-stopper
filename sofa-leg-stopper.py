@@ -41,10 +41,10 @@ class Stopper:
           # Stopper base
           Draft.make_wire(
             [
-              App.Vector(-self.long_width / 2, 0, 0),
               App.Vector(-self.top_width / 2, self.height, 0),
               App.Vector(self.top_width / 2, self.height, 0),
               App.Vector(self.long_width / 2, 0, 0),
+              App.Vector(-self.long_width / 2, 0, 0),
             ],
             closed=True,
           ),
@@ -186,8 +186,8 @@ def main():
                       axis=App.Vector(0, 0, 1),
                   ),
                   by=App.Vector(
-                      cm(14),
-                      cm(6.5),
+                      cm(13.5),
+                      cm(11.5),
                       0,
                   )
               ),
@@ -205,10 +205,8 @@ def main():
                       axis=App.Vector(0, 0, 1),
                   ),
                   by=App.Vector(
-                      # cm(21),
-                      2 * padding + long_width + 2 * top_width,
-                      cm(29),
-                      # padding + long_height,
+                      cm(22),
+                      cm(30),
                       0,
                   )
               ),
@@ -229,19 +227,19 @@ def main():
                   ) for (angle, by) in [
                         (0, App.Vector(
                               0.5 * long_width + padding,
-                              padding,
+                              cm(5.5),
                               0,
                             )
                         ),
                         (0, App.Vector(
                               1 * long_width + 2 * padding + 0.5 * top_width,
-                              2 * padding + long_height,
+                              cm(30-12),
                               0,
                             )
                         ),
                         (180, App.Vector(
                               0.5 * long_width + padding,
-                              2 * padding + long_height * 2,
+                              cm(30),
                               0,
                             )
                         ),
