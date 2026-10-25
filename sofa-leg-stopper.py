@@ -17,19 +17,21 @@ def to_object(doc, name: str, objects: list):
     obj.Group = objects
     return obj
 
-
-def boundry():
+@dataclass
+class Boundry:
     """Create the boundry of the sheet"""
-    return [
-        Draft.make_rectangle(cm(25.5), cm(25.5)),
-    ]
+    width: float
+    height: float
+
+    def __call__(self):
+        return [
+            Draft.make_rectangle(self.width, self.height),
+        ]
 
 
 @dataclass
 class Stopper:
     """Create a stopper"""
-    x: float   # middle
-    y: float   # bottom
     bottom_width: float
     top_width: float
     height: float
@@ -40,10 +42,10 @@ class Stopper:
           # Stopper base
           Draft.make_wire(
             [
-              App.Vector(self.x - self.bottom_width / 2, self.y, 0),
-              App.Vector(self.x - self.top_width / 2, self.height, 0),
-              App.Vector(self.x + self.top_width / 2, self.height, 0),
-              App.Vector(self.x + self.bottom_width / 2, self.y, 0),
+              App.Vector(-self.bottom_width / 2, 0, 0),
+              App.Vector(-self.top_width / 2, self.height, 0),
+              App.Vector(self.top_width / 2, self.height, 0),
+              App.Vector(self.bottom_width / 2, 0, 0),
             ],
             closed=True,
           ),
@@ -51,7 +53,7 @@ class Stopper:
           Draft.make_circle(
             self.hole_radius,
             placement=App.Placement(
-              App.Vector(self.x, self.y + self.height, 0),
+              App.Vector(0, self.height, 0),
               App.Rotation(0, 0, 1)),
               startangle=180,
               endangle=0,
@@ -85,30 +87,46 @@ def main():
     doc = App.newDocument()
     export_list = [ to_object(doc, repr(f), f())
       for (padding, bottom_width, top_width, height, hole_radius) in [
-          (cm(6.1), cm(12), cm(4), cm(12), cm(1)),
+          (cm(.5), cm(12), cm(4), cm(12), cm(1)),
       ]
       for f in [
-          boundry,
+          Boundry(
+              width=cm(25.5),
+              height=cm(25.5),
+          ),
+          # Long Stoppers
           *[Move(
               shape=Rotate(
                 shape=Stopper(
-                  x=padding + bottom_width / 2 * 3 * i,
-                  y=cm(0),
                   bottom_width=bottom_width,
                   top_width=top_width,
                   height=height,
                   hole_radius=hole_radius,
                 ),
                 angle=angle,
-                center=App.Vector(padding + bottom_width / 2 * 3 * i, height* 1.01, cm(0)),
+                center=App.Vector(0, 0, 0),
                 axis=App.Vector(0, 0, 1),
               ),
               by=by,
-              ) for i in range(2)
-                for j in range(2)
-                for (angle, by) in [
-                    (0, App.Vector(0, 0, 0)),
-                    (180, App.Vector(bottom_width * 0.8, -height, 0)),
+              ) for (angle, by) in [
+                    (0, App.Vector(
+                          0.5 * bottom_width + padding,
+                          padding,
+                          0,
+                        )
+                    ),
+                    (0, App.Vector(
+                          1 * bottom_width + 2 * padding + 0.5 * top_width,
+                          2 * padding + height,
+                          0,
+                        )
+                    ),
+                    (180, App.Vector(
+                          0.5 * bottom_width + padding,
+                          2 * padding + height * 2,
+                          0,
+                        )
+                    ),
                 ]
           ]
       ]
