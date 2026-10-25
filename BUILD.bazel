@@ -17,3 +17,8 @@ py_binary(
         "@rules_freecad//platforms:freecad_1.1.x",
     ],
 )
+
+alias(
+    name = "main",
+    actual = "sofa_leg_stopper_py",
+)
