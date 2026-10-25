@@ -136,6 +136,27 @@ def main():
                   width=cm(30.9),
                   height=cm(30.6),
               ),
+              # Short Stopper
+              Move(
+                  shape=Rotate(
+                      shape=Stopper(
+                          long_width=short_width,
+                          top_width=top_width,
+                          height=short_height,
+                          hole_radius=hole_radius,
+                      ),
+                      angle=180,
+                      center=App.Vector(0, 0, 0),
+                      axis=App.Vector(0, 0, 1),
+                  ),
+                  by=App.Vector(
+                      # cm(21),
+                      2 * padding + long_width + 2 * top_width,
+                      cm(29),
+                      # padding + long_height,
+                      0,
+                  )
+              ),
               # Long Stoppers
               *[Move(
                   shape=Rotate(
