@@ -28,7 +28,6 @@ class Boundry:
             Draft.make_rectangle(self.width, self.height),
         ]
 
-
 @dataclass
 class Stopper:
     """Create a stopper"""
@@ -81,78 +80,100 @@ class Move:
     def __call__(self)-> object:
         return Draft.move(self.shape(), self.by, copy=False)
 
+@dataclass
+class ExportToSvg:
+    """Exports the given list of objects as SVG."""
+    path: str
+    export_list:list[Callable[[], object]]
+
+    def __call__(self):
+        doc = App.newDocument()
+        objects = [to_object(doc, repr(obj), obj())
+                  for obj in self.export_list]
+        doc.recompute()
+        importSVG.export(objects, self.path)
+
 
 def main():
     """Entry point to the program."""
     long_width, long_height = cm(12), cm(12)
     short_width, short_height = cm(9), cm(8)
-    doc = App.newDocument()
     padding, top_width, hole_radius = cm(.5), cm(4), cm(1)
 
-    export_list = [ to_object(doc, repr(f), f())
-      for f in [
-          Boundry(
-              width=cm(25.5),
-              height=cm(25.5),
-          ),
-          # Short Stopper
-          Move(
-              shape=Rotate(
-                shape=Stopper(
-                  long_width=short_width,
-                  top_width=top_width,
-                  height=short_height,
-                  hole_radius=hole_radius,
-                ),
-                angle=180,
-                center=App.Vector(0, 0, 0),
-                axis=App.Vector(0, 0, 1),
+    _ = [svg_document() for svg_document in [
+        ExportToSvg(
+            path='./short-leg-stopper.svg',
+            export_list=[
+              Boundry(
+                  width=cm(25.5),
+                  height=cm(25.5),
               ),
-              by=App.Vector(
-                          2 * padding + long_width - top_width + 0.5 * short_width,
-                          padding + long_height,
-                          0,
-                        )
-          ),
-          # Long Stoppers
-          *[Move(
-              shape=Rotate(
-                shape=Stopper(
-                  long_width=long_width,
-                  top_width=top_width,
-                  height=long_height,
-                  hole_radius=hole_radius,
-                ),
-                angle=angle,
-                center=App.Vector(0, 0, 0),
-                axis=App.Vector(0, 0, 1),
+              # Short Stopper
+              Move(
+                  shape=Rotate(
+                      shape=Stopper(
+                          long_width=short_width,
+                          top_width=top_width,
+                          height=short_height,
+                          hole_radius=hole_radius,
+                      ),
+                      angle=180,
+                      center=App.Vector(0, 0, 0),
+                      axis=App.Vector(0, 0, 1),
+                  ),
+                  by=App.Vector(
+                      2 * padding + long_width - top_width + 0.5 * short_width,
+                      padding + long_height,
+                      0,
+                  )
               ),
-              by=by,
-              ) for (angle, by) in [
-                    (0, App.Vector(
-                          0.5 * long_width + padding,
-                          padding,
-                          0,
-                        )
+            ],
+        ),
+        ExportToSvg(
+          path='./leg-stopper.svg',
+          export_list=[
+              Boundry(
+                  width=cm(30.9),
+                  height=cm(30.6),
+              ),
+              # Long Stoppers
+              *[Move(
+                  shape=Rotate(
+                    shape=Stopper(
+                      long_width=long_width,
+                      top_width=top_width,
+                      height=long_height,
+                      hole_radius=hole_radius,
                     ),
-                    (0, App.Vector(
-                          1 * long_width + 2 * padding + 0.5 * top_width,
-                          2 * padding + long_height,
-                          0,
-                        )
-                    ),
-                    (180, App.Vector(
-                          0.5 * long_width + padding,
-                          2 * padding + long_height * 2,
-                          0,
-                        )
-                    ),
-                ]
-          ]
-      ]
-    ]
-    doc.recompute()
-    importSVG.export(export_list, './leg-stopper.svg')
+                    angle=angle,
+                    center=App.Vector(0, 0, 0),
+                    axis=App.Vector(0, 0, 1),
+                  ),
+                  by=by,
+                  ) for (angle, by) in [
+                        (0, App.Vector(
+                              0.5 * long_width + padding,
+                              padding,
+                              0,
+                            )
+                        ),
+                        (0, App.Vector(
+                              1 * long_width + 2 * padding + 0.5 * top_width,
+                              2 * padding + long_height,
+                              0,
+                            )
+                        ),
+                        (180, App.Vector(
+                              0.5 * long_width + padding,
+                              2 * padding + long_height * 2,
+                              0,
+                            )
+                        ),
+                    ]
+              ],
+          ],
+        ),
+    ]]
 
 if __name__ == "__main__":
     main()
