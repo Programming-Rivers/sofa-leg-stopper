@@ -1,5 +1,6 @@
 """Create sofa leg stoppers."""
 from dataclasses import dataclass
+from typing import Callable
 
 import FreeCAD as App
 import Draft
@@ -69,16 +70,27 @@ class Rotate:
     def __call__(self):
         return Draft.rotate(self.shape(), self.angle, self.center)
 
+@dataclass
+class Move:
+    """Move the shap with the given vector."""
+    shape: Callable[[], object]
+    by: App.Vector
+
+    def __call__(self)-> object:
+        return Draft.move(self.shape(), self.by, copy=False)
+        
+        
 def main():
     """Entry point to the program."""
     doc = App.newDocument()
-    export_list = [ to_object(doc, str(f), f())
+    export_list = [ to_object(doc, repr(f), f())
       for (padding, bottom_width, top_width, height, hole_radius) in [
           (cm(6.1), cm(12), cm(4), cm(12), cm(1)),
       ]
       for f in [
           boundry,
-          *[Rotate(
+          *[Move(
+              shape=Rotate(
                 shape=Stopper(
                   x=padding + bottom_width / 2 * 3 * i,
                   y=cm(0),
@@ -90,7 +102,15 @@ def main():
                 angle=angle,
                 center=App.Vector(padding + bottom_width / 2 * 3 * i, height* 1.01, cm(0)),
                 axis=App.Vector(0, 0, 1),
-          ) for i in range (4) for angle in (0, 180)],
+              ),
+              by=by,
+              ) for i in range(2)
+                for j in range(2)
+                for (angle, by) in [
+                    (0, App.Vector(0, 0, 0)),
+                    (180, App.Vector(bottom_width * 0.8, -height, 0)),
+                ]
+          ]
       ]
     ]
     doc.recompute()
