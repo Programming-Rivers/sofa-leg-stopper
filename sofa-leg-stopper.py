@@ -108,7 +108,7 @@ class Rotate:
 
 @dataclass
 class Move:
-    """Move the shap with the given vector."""
+    """Move the shape with the given vector."""
     shape: Callable[[], object]
     by: App.Vector
 
