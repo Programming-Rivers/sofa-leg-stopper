@@ -41,10 +41,11 @@ class Stopper:
           # Stopper base
           Draft.make_wire(
             [
-              App.Vector(-self.top_width / 2, self.height, 0),
-              App.Vector(self.top_width / 2, self.height, 0),
-              App.Vector(self.long_width / 2, 0, 0),
-              App.Vector(-self.long_width / 2, 0, 0),
+              App.Vector(0, 0, 0),
+              App.Vector(self.top_width / 2, 0, 0),
+              App.Vector(self.long_width / 2, -self.height, 0),
+              App.Vector(-self.long_width / 2, -self.height, 0),
+              App.Vector(-self.top_width / 2, 0, 0),
             ],
             closed=True,
           ),
@@ -52,7 +53,7 @@ class Stopper:
           Draft.make_circle(
             self.hole_radius,
             placement=App.Placement(
-              App.Vector(0, self.height, 0),
+              App.Vector(0, 0, 0),
               App.Rotation(0, 0, 1)),
               startangle=180,
               endangle=0,
@@ -162,7 +163,7 @@ def main():
                   ),
                   by=App.Vector(
                       cm(13.5),
-                      cm(11.5),
+                      cm(6.5),
                       0,
                   )
               ),
@@ -181,7 +182,7 @@ def main():
                   ),
                   by=App.Vector(
                       cm(22),
-                      cm(30),
+                      cm(17),
                       0,
                   )
               ),
@@ -201,20 +202,20 @@ def main():
                   by=by,
                   ) for (angle, by) in [
                         (0, App.Vector(
-                              0.5 * long_width + padding,
-                              cm(5.5),
-                              0,
-                            )
-                        ),
-                        (0, App.Vector(
-                              1 * long_width + 2 * padding + 0.5 * top_width,
-                              cm(30-12),
+                              padding + long_width / 2,
+                              padding + long_height,
                               0,
                             )
                         ),
                         (180, App.Vector(
-                              0.5 * long_width + padding,
-                              cm(30),
+                              padding + long_width / 2,
+                              2 * padding + long_height,
+                              0,
+                            )
+                        ),
+                        (0, App.Vector(
+                              2 * padding + long_height + top_width / 2,
+                              2 * padding + 2 * long_height,
                               0,
                             )
                         ),
