@@ -61,6 +61,41 @@ class Stopper:
 
 
 @dataclass
+class ConerStopper:
+    """Create a corner stopper"""
+    top_width: float
+    long_width: float
+    short_width: float
+    height: float
+    hole_radius: float
+
+    def __call__(self):
+        return [
+          # Stopper base
+          Draft.make_wire(
+            [
+              App.Vector(0, 0, 0),
+              App.Vector(-self.top_width / 2, 0, 0),
+              App.Vector(-self.long_width / 2, -self.height, 0),
+              App.Vector(self.long_width / 2, -self.height, 0),
+              App.Vector(self.long_width / 2, self.short_width / 2, 0),
+              App.Vector(0, self.top_width / 2, 0),
+            ],
+            closed=True,
+          ),
+          # Stopper whole
+          Draft.make_circle(
+            self.hole_radius,
+            placement=App.Placement(
+              App.Vector(0, 0, 0),
+              App.Rotation(0, 0, 1)),
+              startangle=-180,
+              endangle=90,
+          ),
+        ]
+
+
+@dataclass
 class Rotate:
     """Rotates the shape around the given center by the given angle amount."""
     shape: Callable[[], object]
@@ -135,6 +170,26 @@ def main():
               Boundry(
                   width=cm(30.9),
                   height=cm(30.6),
+              ),
+              # Corner Stopper
+              Move(
+                  shape=Rotate(
+                      shape=ConerStopper(
+                          top_width=top_width,
+                          long_width=long_width,
+                          short_width=short_width,
+                          height=long_height,
+                          hole_radius=hole_radius,
+                      ),
+                      angle=90,
+                      center=App.Vector(0, 0, 0),
+                      axis=App.Vector(0, 0, 1),
+                  ),
+                  by=App.Vector(
+                      cm(14),
+                      cm(6.5),
+                      0,
+                  )
               ),
               # Short Stopper
               Move(
