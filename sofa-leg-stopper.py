@@ -68,7 +68,8 @@ class ConerStopper:
     top_width: float
     long_width: float
     short_width: float
-    height: float
+    long_height: float
+    short_height: float
     hole_radius: float
 
     def __call__(self):
@@ -76,11 +77,11 @@ class ConerStopper:
           # Stopper base
           Draft.make_wire(
             [
-              App.Vector(-self.hole_radius, 0, 0),
-              App.Vector(-self.top_width / 2, 0, 0),
-              App.Vector(-self.long_width / 2, -self.height, 0),
-              App.Vector(self.long_width / 2, -self.height, 0),
-              App.Vector(self.long_width / 2, self.short_width / 2, 0),
+              App.Vector(self.hole_radius, 0, 0),
+              App.Vector(self.top_width / 2, 0, 0),
+              App.Vector(self.long_width / 2, -self.long_height, 0),
+              App.Vector(-self.short_height, -self.long_height, 0),
+              App.Vector(-self.short_height, self.short_width / 2, 0),
               App.Vector(0, self.top_width / 2, 0),
               App.Vector(0, self.hole_radius, 0),
             ],
@@ -92,8 +93,8 @@ class ConerStopper:
             placement=App.Placement(
               App.Vector(0, 0, 0),
               App.Rotation(0, 0, 1)),
-              startangle=-180,
-              endangle=90,
+              startangle=90,
+              endangle=360,
           ),
         ]
 
@@ -134,9 +135,9 @@ class ExportToSvg:
 
 def main():
     """Entry point to the program."""
+    top_width, hole_radius = cm(4), cm(1)
     long_width, long_height = cm(12), cm(12)
     short_width, short_height = cm(9), cm(7.5)
-    padding, top_width, hole_radius = cm(.5), cm(4), cm(1)
 
     _ = [svg_document() for svg_document in [
         # Currently Exporting only one SVG file becaues everything fits
@@ -156,16 +157,17 @@ def main():
                           top_width=top_width,
                           long_width=long_width,
                           short_width=short_width,
-                          height=long_height,
+                          long_height=long_height,
+                          short_height=short_height,
                           hole_radius=hole_radius,
                       ),
-                      angle=180,
+                      angle=270,
                       center=App.Vector(0, 0, 0),
                       axis=App.Vector(0, 0, 1),
                   ),
                   by=App.Vector(
-                      cm(6.5),
-                      cm(18),
+                      cm(12.5),
+                      cm(10),
                       0,
                   )
               ),
@@ -178,13 +180,13 @@ def main():
                           height=short_height,
                           hole_radius=hole_radius,
                       ),
-                      angle=90,
+                      angle=0,
                       center=App.Vector(0, 0, 0),
                       axis=App.Vector(0, 0, 1),
                   ),
                   by=App.Vector(
-                      cm(0.5),
-                      cm(11),
+                      cm(19.5),
+                      cm(17.5),
                       0,
                   )
               ),
@@ -203,9 +205,9 @@ def main():
                   ),
                   by=by,
                   ) for (angle, by) in [
-                        (-90, App.Vector(
-                              cm(21),
-                              cm(11.5),
+                        (180, App.Vector(
+                              cm(6.5),
+                              cm(18),
                               0,
                             )
                         ),
