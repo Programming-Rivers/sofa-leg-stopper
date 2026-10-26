@@ -41,13 +41,14 @@ class Stopper:
           # Stopper base
           Draft.make_wire(
             [
-              App.Vector(0, 0, 0),
+              App.Vector(self.hole_radius, 0, 0),
               App.Vector(self.top_width / 2, 0, 0),
               App.Vector(self.long_width / 2, -self.height, 0),
               App.Vector(-self.long_width / 2, -self.height, 0),
               App.Vector(-self.top_width / 2, 0, 0),
+              App.Vector(-self.hole_radius, 0, 0),
             ],
-            closed=True,
+            closed=False,
           ),
           # Stopper whole
           Draft.make_circle(
@@ -75,14 +76,15 @@ class ConerStopper:
           # Stopper base
           Draft.make_wire(
             [
-              App.Vector(0, 0, 0),
+              App.Vector(-self.hole_radius, 0, 0),
               App.Vector(-self.top_width / 2, 0, 0),
               App.Vector(-self.long_width / 2, -self.height, 0),
               App.Vector(self.long_width / 2, -self.height, 0),
               App.Vector(self.long_width / 2, self.short_width / 2, 0),
               App.Vector(0, self.top_width / 2, 0),
+              App.Vector(0, self.hole_radius, 0),
             ],
-            closed=True,
+            closed=False,
           ),
           # Stopper whole
           Draft.make_circle(
