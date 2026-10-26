@@ -135,7 +135,7 @@ class ExportToSvg:
 def main():
     """Entry point to the program."""
     long_width, long_height = cm(12), cm(12)
-    short_width, short_height = cm(9), cm(8)
+    short_width, short_height = cm(9), cm(7.5)
     padding, top_width, hole_radius = cm(.5), cm(4), cm(1)
 
     _ = [svg_document() for svg_document in [
@@ -159,13 +159,13 @@ def main():
                           height=long_height,
                           hole_radius=hole_radius,
                       ),
-                      angle=90,
+                      angle=180,
                       center=App.Vector(0, 0, 0),
                       axis=App.Vector(0, 0, 1),
                   ),
                   by=App.Vector(
-                      cm(13.5),
                       cm(6.5),
+                      cm(18),
                       0,
                   )
               ),
@@ -178,13 +178,13 @@ def main():
                           height=short_height,
                           hole_radius=hole_radius,
                       ),
-                      angle=180,
+                      angle=90,
                       center=App.Vector(0, 0, 0),
                       axis=App.Vector(0, 0, 1),
                   ),
                   by=App.Vector(
-                      cm(22),
-                      cm(17),
+                      cm(0.5),
+                      cm(11),
                       0,
                   )
               ),
@@ -203,21 +203,21 @@ def main():
                   ),
                   by=by,
                   ) for (angle, by) in [
-                        (0, App.Vector(
-                              padding + long_width / 2,
-                              padding + long_height,
+                        (-90, App.Vector(
+                              cm(21),
+                              cm(11.5),
                               0,
                             )
                         ),
                         (180, App.Vector(
-                              padding + long_width / 2,
-                              2 * padding + long_height,
+                              cm(23.5),
+                              cm(18),
                               0,
                             )
                         ),
                         (0, App.Vector(
-                              2 * padding + long_height + top_width / 2,
-                              2 * padding + 2 * long_height,
+                              cm(15),
+                              cm(30),
                               0,
                             )
                         ),
